@@ -27,8 +27,8 @@ This project uses the following dependencies:
 
 ### **1️⃣ Clone the Repository**
 ```sh
-git clone <your-repository-url>
-cd <your-project-folder>
+git clone https://github.com/rohans540/argon-lcr
+cd argon-lcr/backend
 ```
 
 ### **2️⃣ Install Dependencies**
