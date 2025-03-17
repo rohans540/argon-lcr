@@ -1,41 +1,38 @@
+import { useSelector } from "react-redux";
 import Grid from "../components/Grid";
 import TaskCard from "../components/TaskCard";
+import { RootState } from "../redux/store";
+import { TaskProps } from "../redux/types";
 
-const taskList = [
+const status = [
   {
-    title: "Task 1",
-    description: "Implement auth"
+    label: "TODO",
+    color: "#45c4e4",
   },
   {
-    title: "Task 2",
-    description: "Change welcome note"
+    label: "In Progress",
+    color: "#836ff7",
   },
   {
-    title: "Task 3",
-    description: "Build pipeline for FE"
-  },
-  {
-    title: "Task 4",
-    description: "Fix bug #898"
-  },
-  {
-    title: "Task 5",
-    description: "Design Navbar"
+    label: "Done",
+    color: "#6be1b0",
   },
 ]
 
 const BoardPage = () => {
 
+  const { currentBoard } = useSelector((state: RootState) => state.app);
+
   return (
-    <div className="flex flex-col items-center justify-start mt-[50px] ml-[20px] min-h-screen w-full bg-[#23232e] text-white">
+    <div className="flex flex-col absolute left-64 items-baseline justify-start mt-[50px] min-h-screen w-full bg-[#23232e] text-white">
 
       <Grid columns={3}>
-        <StatusHead label="TODO" color="#45c4e4" count={2} />
-        <StatusHead label="In Progress" color="#836ff7" count={2} />
-        <StatusHead label="Done" color="#6be1b0" count={1} />
-        {taskList.map((task, index) => (
-          <TaskCard title={task.title} description={task.description} key={task.title+index} />
+        {status.map((status) => (
+          <StatusHead label={status.label} color={status.color} count={2} />
         ))}
+        {currentBoard?.tasks?.length ? currentBoard.tasks.map((task: TaskProps, index: number) => (
+          <TaskCard title={task.title} description={task.description} key={task.title+index} />
+        )) : <NoTasks />}
       </Grid>
     </div>
   );
@@ -55,5 +52,7 @@ const StatusHead: React.FC<StatusProps> = ({ label, color, count }) => {
     </div>
   )
 }
+
+const NoTasks = () => (<h2 className="text-[20px] text-gray-500 font-poppins font-semibold">No Tasks</h2>)
 
 export default BoardPage;

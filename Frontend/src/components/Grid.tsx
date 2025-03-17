@@ -8,7 +8,7 @@ interface GridProps {
 const Grid: React.FC<GridProps> = ({ columns = 3, children }) => {
   return (
     <div
-      className={`grid gap-4 p-4 `}
+      className={`grid gap-4 p-4`}
       style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
     >
       {children}

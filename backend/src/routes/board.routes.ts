@@ -59,9 +59,9 @@ router.get("/:id", getBoard);
  *           schema:
  *             type: object
  *             required:
- *               - name
+ *               - title
  *             properties:
- *               name:
+ *               title:
  *                 type: string
  *                 example: "New Board"
  *     responses:

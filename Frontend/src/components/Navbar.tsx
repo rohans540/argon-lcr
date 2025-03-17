@@ -1,10 +1,13 @@
+import { useSelector } from "react-redux";
 import Button from "./Button";
+import { RootState } from "../redux/store";
 
 const Navbar = () => {
+  const { currentBoard } = useSelector((state: RootState) => state.app);
   return (
     <nav className="w-[calc(100%-16rem)] fixed left-64 top-0 h-[100px] bg-[#2c2c37] border-b-[0.2px] border-gray-500 flex items-center px-6">
       <div className="w-full flex justify-between items-center max-w-7xl mx-auto">
-        <div className="text-[22px] font-semibold">Platform Launch</div>
+        <div className="text-[22px] font-semibold">{currentBoard.title}</div>
         <Button
           btnType="button"
           title="+ Add new task"
