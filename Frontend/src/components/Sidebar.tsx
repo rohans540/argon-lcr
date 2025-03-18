@@ -5,13 +5,13 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import { BoardProps } from "../redux/types";
-import { setCurrentBoard } from "../redux/app.slice";
+import { setCurrentBoard, setOpenForm } from "../redux/app.slice";
 
 type MenuItemProps = {
   label: string;
   link?: string;
   isActive?: boolean;
-  onClick?: any;
+  onClick?: () => void;
 }
 
 const MenuItem: React.FC<MenuItemProps> = ({ label, link, isActive, onClick }) => {
@@ -22,10 +22,10 @@ const MenuItem: React.FC<MenuItemProps> = ({ label, link, isActive, onClick }) =
       <img src={icon} alt="dashboard-icon" className="w-[24px] h-[24px]" />
       <span className={`font-semibold text-[15px] ${isActive ? 'text-white' : 'text-gray-500'}`}>{label}</span>
     </Link>
-  </li> : <div className="flex justify-around items-center py-2 px-4 hover:underline text-[#645fc5] cursor-pointer rounded-tr-[20px] rounded-br-[20px]">
+  </li> : <button onClick={onClick} className="flex justify-around items-center py-2 px-4 hover:underline text-[#645fc5] cursor-pointer rounded-tr-[20px] rounded-br-[20px]">
     <img src={menuIcon} alt="create new" className="w-[24px] h-[24px]" />
     <span className="text-[#645fc5]">{label}</span>
-  </div>
+  </button>
   )
 }
 
@@ -33,6 +33,10 @@ const Sidebar = () => {
 
   const { boards, currentBoard } = useSelector((state: RootState) => state.app)
   const dispatch = useDispatch();
+
+  const openCreateModal = () => {
+    dispatch(setOpenForm(true));
+  }
 
     return (
       <div className="w-64 h-full fixed left-0 top-0 bg-[#2c2c37] p-4 border-r-[0.2px] border-gray-500 z-50 flex flex-col gap-[20px]">
@@ -43,7 +47,7 @@ const Sidebar = () => {
           {boards.map((item: BoardProps, index: number) => (
             <MenuItem key={item.title+index} onClick={() => dispatch(setCurrentBoard(item))} label={item.title} link={`/board/${item.id}`} isActive={item.id === currentBoard.id} />
           ))}
-            <MenuItem label="+ Create board" />
+            <MenuItem label="+ Create board" onClick={openCreateModal} />
         </ul>
       </div>
     );

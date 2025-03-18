@@ -20,3 +20,7 @@ export type BoardProps = {
     tasks: TaskProps[];
     title: string;
 }
+
+export interface BoardFormProps {
+    title: string;
+  }

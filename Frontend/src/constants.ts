@@ -6,5 +6,5 @@ export const BOARDS = '/boards';
 export const BOARDBYID = (id: number) => `/boards/${id}`;
 
 //Tasks
-export const TASK = "/task";
+export const TASK = "/tasks";
 export const TASKBYID = (id: number) => `/task/${id}`;

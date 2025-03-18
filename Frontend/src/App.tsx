@@ -1,14 +1,17 @@
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import BoardPage from "./pages/Boardpage";
 import Sidebar from "./components/Sidebar";
 import Navbar from "./components/Navbar";
 import { getAllBoards } from "./redux/app.slice";
+import { RootState } from "./redux/store";
+import Loader from "./components/Loader";
 
 function App() {
   const dispatch = useDispatch();
+  const { loading } = useSelector((state: RootState) => state.app);
 
   useEffect(() => {
     dispatch(getAllBoards())
@@ -26,6 +29,7 @@ function App() {
           </Routes>
         </div>
       </div>
+      <Loader loading={loading} />
     </div>
   );
 }
