@@ -61,11 +61,12 @@ export const updateTask: any = createAsyncThunk(
     }
 )
 
+const storedBoard = localStorage.getItem("currentBoard");
 const appSlice = createSlice({
     name: 'app',
     initialState: {
         boards: [] as BoardProps[],
-        currentBoard: {} as BoardProps,
+        currentBoard: storedBoard ? JSON.parse(storedBoard) : {} as BoardProps,
         createBoardSuccess: false,
         openForm: false,
         openTaskForm: false,
@@ -74,6 +75,7 @@ const appSlice = createSlice({
     reducers: {
         setCurrentBoard: (state, action) => {
             state.currentBoard = action.payload;
+            localStorage.setItem("currentBoard", JSON.stringify(action.payload));
         },
         setOpenForm: (state, action) => {
             state.openForm = action.payload
@@ -89,8 +91,18 @@ const appSlice = createSlice({
             })
             .addCase(getAllBoards.fulfilled, (state: any, action: any) => {
                 state.loading = false;
-                state.boards = action.payload.data
-                state.currentBoard = action.payload.data[0]
+                state.boards = action.payload.data;
+
+                const storedBoard = localStorage.getItem("currentBoard");
+                if (storedBoard) {
+                    const parsedBoard = JSON.parse(storedBoard);
+                    const boardExists = state.boards.find((b: BoardProps) => b.id === parsedBoard.id);
+                    state.currentBoard = boardExists ? parsedBoard : state.boards[0];
+                } else {
+                    state.currentBoard = state.boards[0];
+                }
+
+                localStorage.setItem("currentBoard", JSON.stringify(state.currentBoard));
             })
             .addCase(getAllBoards.rejected, (state: any) => {
                 state.loading = false
