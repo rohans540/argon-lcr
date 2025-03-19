@@ -11,7 +11,7 @@ import Button from "../components/Button";
 import CreateNewTask from "../components/CreateNewTask";
 import { createBoard, setOpenForm } from "../redux/app.slice";
 
-const status = [
+const statusList = [
   {
     label: "TODO",
     color: "#45c4e4",
@@ -37,32 +37,58 @@ const BoardPage = () => {
     toast.success("Board created successfully")
     reset();
   };
+  const hasNoTasks = !currentBoard?.tasks || currentBoard.tasks.length === 0;
 
   return (
     <div className="flex flex-col absolute left-64 items-baseline justify-start mt-[50px] min-h-screen w-full bg-[#23232e] text-white">
+      {hasNoTasks ? (
+        <NoTasks />
+      ) : (
+        <Grid columns={3}>
+          {statusList.map((status) => {
+            // Filter tasks based on status
+            const filteredTasks = currentBoard?.tasks?.filter(
+              (task: TaskProps) => task.status === status.label
+            ) || [];
 
-      <Grid columns={3}>
-        {status.map((status) => (
-          <StatusHead label={status.label} color={status.color} count={2} />
-        ))}
-        {currentBoard?.tasks?.length ? currentBoard.tasks.map((task: TaskProps, index: number) => (
-          <TaskCard title={task.title} description={task.description} key={task.title + index} />
-        )) : <NoTasks />}
-      </Grid>
-      {openForm && <Popform open={openForm} onClose={() => dispatch(setOpenForm(false))} title="Create Board" onSubmit={handleSubmit(onSubmit)}>
-        <CustomInput
-          id="title"
-          placeHolder="Title"
-          inputType="text"
-          register={register("title", { required: true })}
-        />
-        <Button
-          btnType="submit"
-          title="Create new"
-          handleClick={() => { }}
-          className="flex items-center justify-center rounded-[30px] font-semibold h-[40px] w-[180px] p-4 bg-[#645fc5] text-white hover:bg-[#2c2c37] hover:border-[1px] border-[#645fc5] hover:text-[#645fc5]"
-        />
-      </Popform>}
+            return (
+              <div key={status.label} className="flex flex-col gap-4">
+                <StatusHead label={status.label} color={status.color} count={filteredTasks.length} />
+                {filteredTasks.map((task: TaskProps, index: number) => (
+                  <TaskCard
+                    title={task.title}
+                    description={task.description}
+                    key={task.title + index}
+                  />
+                ))}
+              </div>
+            );
+          })}
+        </Grid>
+      )}
+
+      {openForm && (
+        <Popform
+          open={openForm}
+          onClose={() => dispatch(setOpenForm(false))}
+          title="Create Board"
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <CustomInput
+            id="title"
+            placeHolder="Title"
+            inputType="text"
+            register={register("title", { required: true })}
+          />
+          <Button
+            btnType="submit"
+            title="Create new"
+            handleClick={() => { }}
+            className="flex items-center justify-center rounded-[30px] font-semibold h-[40px] w-[180px] p-4 bg-[#645fc5] text-white hover:bg-[#2c2c37] hover:border-[1px] border-[#645fc5] hover:text-[#645fc5]"
+          />
+        </Popform>
+      )}
+
       {openTaskForm && <CreateNewTask />}
     </div>
   );
